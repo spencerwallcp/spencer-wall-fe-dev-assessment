@@ -69,6 +69,68 @@ const mockTodos = [
 
       })
 
+      test('Todo items only with isComplete not equal true are loaded', async () => {
+
+        const mockTodos2Complete = [
+          {
+            id: 1,
+            description: "AAA Todo",
+            isComplete: true
+          },
+          {
+            id: 2,
+            description: "BBB Todo",
+            isComplete: false
+          },
+          {
+            id: 3,
+            description: "CCC Todo",
+            isComplete: true
+          },
+          ];
+
+        axios.get.mockResolvedValue({ data: mockTodos2Complete });
+
+        render(<App />)
+
+        const table = await screen.findByRole('table')
+        const rows = await within(table).findAllByRole('row')
+        expect(rows).toHaveLength(2) // 1 title row and 1 line of data from the API
+
+      })
+
+      test('Todo items only with isComplete not equal true correct item loaded', async () => {
+
+        const mockTodos2Complete = [
+          {
+            id: 1,
+            description: "AAA Todo",
+            isComplete: true
+          },
+          {
+            id: 2,
+            description: "BBB Todo",
+            isComplete: false
+          },
+          {
+            id: 3,
+            description: "CCC Todo",
+            isComplete: true
+          },
+          ];
+
+        axios.get.mockResolvedValue({ data: mockTodos2Complete });
+
+        render(<App />)
+
+        const table = await screen.findByRole('table')
+        const rows = await within(table).findAllByRole('row')
+        const row1cols = await within(rows[1]).findAllByRole('cell')
+
+        expect(row1cols[1]).toHaveTextContent('BBB Todo')
+
+      })
+
       test('Failed API call has no data on page', async () => {
 
         const message = "Network Error";
