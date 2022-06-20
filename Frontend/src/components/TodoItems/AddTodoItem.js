@@ -2,10 +2,12 @@ import '../../App.css'
 import { Button, Container, Row, Col, Form, Stack } from 'react-bootstrap'
 import React, { useState } from 'react'
 import { createItem } from '../../services/ItemService';
+import ErrorDialog from '../ErrorDialog'
 
 const AddTodoItem = ({ getItems}) => {
 
   const [description, setDescription] = useState('')
+  const [show, setShow] = useState(false)
 
   async function handleAdd() {
 
@@ -23,6 +25,7 @@ const AddTodoItem = ({ getItems}) => {
         await createItem(item);
         getItems();
       } catch (error) {
+        setShow(true);
         console.error(error);
       }
 
@@ -39,6 +42,7 @@ const AddTodoItem = ({ getItems}) => {
 
 return (
     <Container>
+    <ErrorDialog handleClose={() => setShow(false)} show={show}></ErrorDialog>
     <h1>Add Item</h1>
     <Form.Group as={Row} className="mb-3" controlId="formAddTodoItem">
       <Form.Label column sm="2">

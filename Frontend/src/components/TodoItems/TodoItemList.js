@@ -1,9 +1,12 @@
 import '../../App.css'
 import { Button, Table } from 'react-bootstrap'
-import React from 'react'
+import React, {useState} from 'react'
 import { updateItem } from '../../services/ItemService';
+import ErrorDialog from '../ErrorDialog'
 
 const TodoItemList = ({items, getItems}) => {
+
+  const [show, setShow] = useState(false);
 
   async function handleMarkAsComplete(item) {
   
@@ -13,6 +16,7 @@ const TodoItemList = ({items, getItems}) => {
         await updateItem(item);
         getItems();
       } catch (error) {
+        setShow(true);
         console.error(error);
       }
 
@@ -20,6 +24,7 @@ const TodoItemList = ({items, getItems}) => {
 
     return (
         <>
+        <ErrorDialog handleClose={() => setShow(false)} show={show}></ErrorDialog>
           <h1>
           Showing {items.length} Item(s){' '}
             <Button variant="primary" className="pull-right" onClick={() => getItems()}>

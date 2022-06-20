@@ -2,12 +2,14 @@ import '../App.css'
 import { Image, Alert, Container, Row, Col } from 'react-bootstrap'
 import AddTodoItem from '../components/TodoItems/AddTodoItem'
 import TodoItemList from '../components/TodoItems/TodoItemList'
+import ErrorDialog from '../components/ErrorDialog'
 import React, {useState, useEffect} from 'react'
 import { getAllItems } from '../services/ItemService';
 
 const TodoItemsSummary = () => {
 
   const [items, setItems] = useState([])
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     getItems();
@@ -19,6 +21,7 @@ const TodoItemsSummary = () => {
       const response = await getAllItems();
       formatItems(response.data);
     } catch (error) {
+      setShow(true);
       console.error(error);
     }
   }
@@ -47,6 +50,7 @@ const TodoItemsSummary = () => {
 
       <div className="App">
         <Container>
+        <ErrorDialog handleClose={() => setShow(false)} show={show}></ErrorDialog>
           <Row>
             <Col>
               <Image src="clearPointLogo.png" fluid rounded />
